@@ -214,11 +214,7 @@ function handler($context, $inputs) {
         $minionAcceptResponse = Invoke-RestMethod https://$salt_master/rpc -Method 'POST' -Headers $loginHeaders -Body $minionAcceptBody -SkipCertificateCheck
         Write-Host "Minion Accepted ? : " $minionAcceptResponse.ret
   }
-  
-  <#--- Apply states to minion based on minion name  ---#>
-  #Write-Host "Applying states to minion based on minion name"
-  #Set-MinionState
-  
+    
 return $inputs
 
 }
