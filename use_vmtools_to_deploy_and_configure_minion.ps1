@@ -10,7 +10,7 @@ function handler($context, $inputs) {
  
   <#--- Set SaltStack Connection Variables ---#>
   $salt_master = "10.225.0.237"                  # Enter SaltStack Config master IP or FQDN here
-  $saltUsername = "root"
+  $saltUsername = "root"                        # Any SaltStack API / web-UI user with Superuser permissions 
   $saltPassword = $context.getSecret($inputs.saltPassword)  # Must use encrypted SECRET in vRA here - setup in vRA web-UI -> Cloud Assembly -> Infrastrucutre -> Secrets
   $salt_userpass = $saltUsername + ":" + $saltPassword
   $base64encoded = [Convert]::ToBase64String([Text.Encoding]::Utf8.GetBytes($salt_userpass))
