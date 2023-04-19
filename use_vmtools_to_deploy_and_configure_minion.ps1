@@ -1,16 +1,17 @@
-# PowerShell
+# PowerShell - customize your values for vCenter, SaltStack, and usernames for both, respectively.
+
 function handler($context, $inputs) {
   <#--- Set vCenter Connection Variables ---#>
   $vcServer = "10.206.240.100"   # Enter vCenter IP or FQDN here between the double-quotes
   $vcUsername = "administrator@vsphere.local"     # Different vCenter user can be specified, admin rights in vSphere required
-  $vcPassword = $context.getSecret($inputs.vcPassword)  # Must use encrypted SECRET in vRA here
+  $vcPassword = $context.getSecret($inputs.vcPassword)  # Must use encrypted SECRET in vRA here - setup in vRA web-UI -> Cloud Assembly -> Infrastrucutre -> Secrets
   write-host "${vcServer}: " $vcServer
   write-host "${vcUsername}: " $vcUsername
  
   <#--- Set SaltStack Connection Variables ---#>
   $salt_master = "10.225.0.237"                  # Enter SaltStack Config master IP or FQDN here
   $saltUsername = "root"
-  $saltPassword = $context.getSecret($inputs.saltPassword)     # Must use encrypted SECRET in vRA here
+  $saltPassword = $context.getSecret($inputs.saltPassword)  # Must use encrypted SECRET in vRA here - setup in vRA web-UI -> Cloud Assembly -> Infrastrucutre -> Secrets
   $salt_userpass = $saltUsername + ":" + $saltPassword
   $base64encoded = [Convert]::ToBase64String([Text.Encoding]::Utf8.GetBytes($salt_userpass))
   $salt_base64Auth = "Basic $base64encoded"
@@ -59,7 +60,7 @@ function handler($context, $inputs) {
     if($lastStatus.value -eq $null)
         {
             write-host "Last Status is null, sleeping for 60 seconds"
-            Start-Sleep -Seconds 60
+            Start-Sleep -Seconds 80
         }
         elseif($lastStatus.value -eq 100)
         {
@@ -68,12 +69,12 @@ function handler($context, $inputs) {
         elseif($lastStatus.value -eq 101)
         {
             write-host "Installing Minion, sleeping for 15 seconds"
-            Start-Sleep -Seconds 15
+            Start-Sleep -Seconds 30
         }
         elseif($lastStatus.value -eq 102)
         {
             write-host "Minion Not Installed, sleeping for 15 seconds"
-            Start-Sleep -Seconds 15
+            Start-Sleep -Seconds 30
         }
         elseif($lastStatus.value -eq 103)
         {
@@ -89,7 +90,7 @@ function handler($context, $inputs) {
         else
         {
             write-host "Status: " $lastStatus.value
-            Start-Sleep -Seconds 15
+            Start-Sleep -Seconds 30
         }
     $retryCounter = $retryCounter + $sleepIntervall
     if($retryCounter -gt $timeOut) {break}
