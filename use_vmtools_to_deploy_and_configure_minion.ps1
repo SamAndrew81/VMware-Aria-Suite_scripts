@@ -1,21 +1,24 @@
 # PowerShell
 function handler($context, $inputs) {
   <#--- Set vCenter Connection Variables ---#>
-  $vcServer = "10.206.240.100"
-  $vcUsername = "administrator@vsphere.local"
-  $vcPassword = $context.getSecret($inputs.vcPassword)
+  $vcServer = "10.206.240.100"   # Enter vCenter IP or FQDN here between the double-quotes
+  $vcUsername = "administrator@vsphere.local"     # Different vCenter user can be specified, admin rights in vSphere required
+  $vcPassword = $context.getSecret($inputs.vcPassword)  # Must use encrypted SECRET in vRA here
   write-host "${vcServer}: " $vcServer
   write-host "${vcUsername}: " $vcUsername
-  write-host "${vcPassword}: " $vcPassword
  
   <#--- Set SaltStack Connection Variables ---#>
-  $salt_master = "10.225.0.237"
+  $salt_master = "10.225.0.237"                  # Enter SaltStack Config master IP or FQDN here
   $saltUsername = "root"
-  $saltPassword = "salt"
+  $saltPassword = $context.getSecret($inputs.saltPassword)     # Must use encrypted SECRET in vRA here
   $salt_userpass = $saltUsername + ":" + $saltPassword
   $base64encoded = [Convert]::ToBase64String([Text.Encoding]::Utf8.GetBytes($salt_userpass))
   $salt_base64Auth = "Basic $base64encoded"
   $global:xsrfTokenRequest = $null
+  write-host "${salt_master}: " $salt_master
+  write-host "${saltUsername}: " $saltUsername
+  
+# NOTHING AFTER THIS LINE GETS CUSTOMIZED   
   
   if($inputs.resourceName -eq $null) {
       write-host "Triggered from a subscription"
