@@ -21,13 +21,7 @@ function handler($context, $inputs) {
   
 # NOTHING AFTER THIS LINE GETS CUSTOMIZED   
   
-  if($inputs.resourceName -eq $null) {
-      write-host "Triggered from a subscription"
-      $VMName = $inputs.resourceNames[0]
-  } else {
-      write-host "Triggered from Day-2 action"
-      $VMName = $inputs.resourceName
-  }
+$VMName = $inputs.resourceName
 
   function Set-MinionSettings {
     $vm = get-VM -Name $VMName
