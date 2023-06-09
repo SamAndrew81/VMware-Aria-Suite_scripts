@@ -153,7 +153,7 @@ $VMName = $inputs.resourceName
   Write-Host "Setting configuration parameter for $VMName"
   $connect = Connect-VIServer $vcServer -User $vcUsername -Password $vcPassword -Protocol https -Force
 
-  if($VMName -like '*win*') {
+  # FIX TO SCRIPT HERE - June 9, 2023 >>>>>>>>>>>>>>>>>>
     write-host "Installing tools minion on " $VMName
     Set-MinionSettings
     Get-MinionInstallStatus
@@ -161,12 +161,12 @@ $VMName = $inputs.resourceName
     Disconnect-vCenter
     Get-AriaConfigStatus
     write-host "Aria Config is responding with 200"
-   } else {
+  
     write-host "Accepting minion id: " $VMName
     Disconnect-vCenter
     Get-AriaConfigStatus
     write-host "Aria Config is responding with 200"
-  }
+  
     
   <#--- Setup headers and connect to receive a X-Xsrftoken ---#>
   #write-host "xsrfTokenHeaders: " $xsrfTokenHeaders
