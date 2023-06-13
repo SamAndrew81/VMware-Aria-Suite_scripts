@@ -21,8 +21,16 @@ function handler($context, $inputs) {
   
 # NOTHING AFTER THIS LINE GETS CUSTOMIZED   
   
-$VMName = $inputs.resourceName
-
+# Set #VMName variable 
+if($inputs.resourceName -eq $null) {
+    write-host "Triggered from a subscription"
+    $VMName = $inputs.resourceNames[0]
+} else {
+    write-host "Triggered from Day-2 action"
+    $VMName = $inputs.resourceName
+  }
+  
+  # Run PowerCLI Commands to install & config Minion via VMtools
   function Set-MinionSettings {
     $vm = get-VM -Name $VMName
     $salt_minion_id = $VMName.ToLower()
@@ -30,6 +38,7 @@ $VMName = $inputs.resourceName
     New-AdvancedSetting -Entity $vm -Name "guestinfo./vmware.components.salt_minion.desiredstate" -Value "present" -Confirm:$false -Force
   }
 
+# Check minion installation progress
   function Get-MinionInstallStatus {
     $vm = get-VM -Name $VMName
     $timeOut = 800
